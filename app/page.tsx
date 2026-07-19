@@ -154,10 +154,21 @@ export default function Home() {
     setError(null);
     const client = window.google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
-      scope: YT_SCOPE,
+      scope: `${YT_SCOPE} openid profile`,
       callback: async (res: any) => {
         try {
           if (!res?.access_token) throw new Error("no token");
+          // Station takes the listener's real first name from their Google
+          // account — the name field is only a demo-mode fallback.
+          fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+            headers: { Authorization: `Bearer ${res.access_token}` },
+          })
+            .then((r) => (r.ok ? r.json() : null))
+            .then((u) => {
+              const first = (u?.given_name || u?.name || "").trim().split(/\s+/)[0];
+              if (first) setName((n) => n.trim() || first);
+            })
+            .catch(() => {});
           const yt = (path: string) =>
             fetch(`https://www.googleapis.com/youtube/v3/${path}`, {
               headers: { Authorization: `Bearer ${res.access_token}` },
@@ -459,8 +470,8 @@ export default function Home() {
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="your name → names the station"
-            aria-label="Your name — names the station (optional)"
+            placeholder="name auto-fills from Google — or type one"
+            aria-label="Station name — auto-filled from your Google account, editable"
             className="rounded-lg border border-line bg-transparent px-3 py-2 text-sm placeholder:text-muted focus:border-amber focus:outline-none"
           />
           <button
