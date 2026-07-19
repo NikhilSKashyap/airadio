@@ -1,26 +1,105 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #07070b;
+  --foreground: #ece7dd;
+  --amber: #f59e0b;
+  --violet: #8b5cf6;
+  --muted: #8b8596;
+  --line: rgba(236, 231, 221, 0.1);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-amber: var(--amber);
+  --color-violet: var(--violet);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+body {
+  background:
+    radial-gradient(1100px 700px at 85% -10%, rgba(139, 92, 246, 0.09), transparent 60%),
+    radial-gradient(900px 600px at 5% 105%, rgba(245, 158, 11, 0.05), transparent 55%),
+    var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes onair {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5);
+  }
+  50% {
+    opacity: 0.7;
+    box-shadow: 0 0 0 7px rgba(245, 158, 11, 0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.onair-dot {
+  animation: onair 1.7s ease-in-out infinite;
+}
+
+.dial {
+  background-image: repeating-linear-gradient(
+      to right,
+      var(--line) 0 1px,
+      transparent 1px 11px
+    ),
+    repeating-linear-gradient(
+      to right,
+      rgba(236, 231, 221, 0.32) 0 1px,
+      transparent 1px 55px
+    );
+  background-size:
+    100% 14px,
+    100% 26px;
+  background-position: bottom, bottom;
+  background-repeat: no-repeat;
+}
+
+.dial-needle {
+  background: var(--amber);
+  box-shadow:
+    0 0 8px rgba(245, 158, 11, 0.9),
+    0 0 22px rgba(245, 158, 11, 0.4);
+}
+
+/* NotebookLM-style left rail: darker panel with a faint violet wash, its own
+   scrollbar kept slim so the panel reads as one surface. */
+.sidebar {
+  background:
+    radial-gradient(420px 320px at 50% -10%, rgba(139, 92, 246, 0.08), transparent 70%),
+    rgba(0, 0, 0, 0.45);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(236, 231, 221, 0.18) transparent;
+}
+
+/* Selected host card: amber ring lives on the avatar (Tailwind ring), the
+   subtle glow lives here on the card. */
+.avatar-selected {
+  box-shadow:
+    0 0 14px rgba(245, 158, 11, 0.18),
+    inset 0 0 24px rgba(245, 158, 11, 0.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onair-dot {
+    animation: none;
+  }
 }
