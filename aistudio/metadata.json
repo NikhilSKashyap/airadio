@@ -1,0 +1,5 @@
+{
+  "name": "Wavelength",
+  "description": "Your personal AI radio station — Gemini writes the show, an original AI host voices it live with today's real news, and the music, ads, and reactions all bend to your taste. FM for an audience of one.",
+  "requestFramePermissions": ["microphone"]
+}
